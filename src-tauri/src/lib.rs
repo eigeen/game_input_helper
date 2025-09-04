@@ -14,10 +14,10 @@ fn input(content: &str) {
 
     thread::sleep(Duration::from_millis(100));
     let input = input::Input::global();
-    if let Err(e) = input.input_key(enigo::Key::Return) {
-        log::error!("Failed to input return: {}", e);
-    }
-    thread::sleep(Duration::from_millis(100));
+    // if let Err(e) = input.input_key(enigo::Key::Return) {
+    //     log::error!("Failed to input return: {}", e);
+    // }
+    // thread::sleep(Duration::from_millis(100));
     if let Err(e) = input.input_text(content) {
         log::error!("Failed to input text: {}", e);
     };
