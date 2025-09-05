@@ -1,9 +1,9 @@
 {
   "version": "5",
   "specifiers": {
-    "npm:@tauri-apps/api@2": "2.2.0",
-    "npm:@tauri-apps/cli@2": "2.2.5",
-    "npm:@tauri-apps/plugin-opener@2": "2.2.4",
+    "npm:@tauri-apps/api@2": "2.8.0",
+    "npm:@tauri-apps/cli@2": "2.8.4",
+    "npm:@tauri-apps/plugin-opener@2": "2.5.0",
     "npm:@vitejs/plugin-vue@^6.0.1": "6.0.1_vite@7.1.4__picomatch@4.0.3_vue@3.5.21__typescript@5.9.2_typescript@5.9.2",
     "npm:typescript@~5.9.2": "5.9.2",
     "npm:vite@^7.1.4": "7.1.4_picomatch@4.0.3",
@@ -325,78 +325,85 @@
       "cpu": ["x64"],
       "tarball": "https://registry.npmmirror.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.50.0.tgz"
     },
-    "@tauri-apps/api@2.2.0": {
-      "integrity": "sha512-R8epOeZl1eJEl603aUMIGb4RXlhPjpgxbGVEaqY+0G5JG9vzV/clNlzTeqc+NLYXVqXcn8mb4c5b9pJIUDEyAg==",
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/api/-/api-2.2.0.tgz"
+    "@tauri-apps/api@2.8.0": {
+      "integrity": "sha512-ga7zdhbS2GXOMTIZRT0mYjKJtR9fivsXzsyq5U3vjDL0s6DTMwYRm0UHNjzTY5dh4+LSC68Sm/7WEiimbQNYlw==",
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/api/-/api-2.8.0.tgz"
     },
-    "@tauri-apps/cli-darwin-arm64@2.2.5": {
-      "integrity": "sha512-qdPmypQE7qj62UJy3Wl/ccCJZwsv5gyBByOrAaG7u5c/PB3QSxhNPegice2k4EHeIuApaVJOoe/CEYVgm/og2Q==",
+    "@tauri-apps/cli-darwin-arm64@2.8.4": {
+      "integrity": "sha512-BKu8HRkYV01SMTa7r4fLx+wjgtRK8Vep7lmBdHDioP6b8XH3q2KgsAyPWfEZaZIkZ2LY4SqqGARaE9oilNe0oA==",
       "os": ["darwin"],
       "cpu": ["arm64"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-darwin-arm64/-/cli-darwin-arm64-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-darwin-arm64/-/cli-darwin-arm64-2.8.4.tgz"
     },
-    "@tauri-apps/cli-darwin-x64@2.2.5": {
-      "integrity": "sha512-8JVlCAb2c3n0EcGW7n/1kU4Rq831SsoLDD/0hNp85Um8HGIH2Mg/qos/MLOc8Qv2mOaoKcRKf4hd0I1y0Rl9Cg==",
+    "@tauri-apps/cli-darwin-x64@2.8.4": {
+      "integrity": "sha512-imb9PfSd/7G6VAO7v1bQ2A3ZH4NOCbhGJFLchxzepGcXf9NKkfun157JH9mko29K6sqAwuJ88qtzbKCbWJTH9g==",
       "os": ["darwin"],
       "cpu": ["x64"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-darwin-x64/-/cli-darwin-x64-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-darwin-x64/-/cli-darwin-x64-2.8.4.tgz"
     },
-    "@tauri-apps/cli-linux-arm-gnueabihf@2.2.5": {
-      "integrity": "sha512-mzxQCqZg7ljRVgekPpXQ5TOehCNgnXh/DNWU6kFjALaBvaw4fGzc369/hV94wOt29htNFyxf8ty2DaQaYljEHw==",
+    "@tauri-apps/cli-linux-arm-gnueabihf@2.8.4": {
+      "integrity": "sha512-Ml215UnDdl7/fpOrF1CNovym/KjtUbCuPgrcZ4IhqUCnhZdXuphud/JT3E8X97Y03TZ40Sjz8raXYI2ET0exzw==",
       "os": ["linux"],
       "cpu": ["arm"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-arm-gnueabihf/-/cli-linux-arm-gnueabihf-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-arm-gnueabihf/-/cli-linux-arm-gnueabihf-2.8.4.tgz"
     },
-    "@tauri-apps/cli-linux-arm64-gnu@2.2.5": {
-      "integrity": "sha512-M9nkzx5jsSJSNpp7aSza0qv0/N13SUNzH8ysYSZ7IaCN8coGeMg2KgQ5qC6tqUVij2rbg8A/X1n0pPo/gtLx0A==",
+    "@tauri-apps/cli-linux-arm64-gnu@2.8.4": {
+      "integrity": "sha512-pbcgBpMyI90C83CxE5REZ9ODyIlmmAPkkJXtV398X3SgZEIYy5TACYqlyyv2z5yKgD8F8WH4/2fek7+jH+ZXAw==",
       "os": ["linux"],
       "cpu": ["arm64"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-arm64-gnu/-/cli-linux-arm64-gnu-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-arm64-gnu/-/cli-linux-arm64-gnu-2.8.4.tgz"
     },
-    "@tauri-apps/cli-linux-arm64-musl@2.2.5": {
-      "integrity": "sha512-tFhZu950HNRLR1RM5Q9Xj5gAlA6AhyyiZgeoXGFAWto+s2jpWmmA3Qq2GUxnVDr7Xui8PF4UY5kANDIOschuwg==",
+    "@tauri-apps/cli-linux-arm64-musl@2.8.4": {
+      "integrity": "sha512-zumFeaU1Ws5Ay872FTyIm7z8kfzEHu8NcIn8M6TxbJs0a7GRV21KBdpW1zNj2qy7HynnpQCqjAYXTUUmm9JAOw==",
       "os": ["linux"],
       "cpu": ["arm64"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.8.4.tgz"
     },
-    "@tauri-apps/cli-linux-x64-gnu@2.2.5": {
-      "integrity": "sha512-eaGhTQLr3EKeksGsp2tK/Ndi7/oyo3P53Pye6kg0zqXiqu8LQjg1CgvDm1l+5oit04S60zR4AqlDFpoeEtDGgw==",
+    "@tauri-apps/cli-linux-riscv64-gnu@2.8.4": {
+      "integrity": "sha512-qiqbB3Zz6IyO201f+1ojxLj65WYj8mixL5cOMo63nlg8CIzsP23cPYUrx1YaDPsCLszKZo7tVs14pc7BWf+/aQ==",
+      "os": ["linux"],
+      "cpu": ["riscv64"],
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-riscv64-gnu/-/cli-linux-riscv64-gnu-2.8.4.tgz"
+    },
+    "@tauri-apps/cli-linux-x64-gnu@2.8.4": {
+      "integrity": "sha512-TaqaDd9Oy6k45Hotx3pOf+pkbsxLaApv4rGd9mLuRM1k6YS/aw81YrsMryYPThrxrScEIUcmNIHaHsLiU4GMkw==",
       "os": ["linux"],
       "cpu": ["x64"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-x64-gnu/-/cli-linux-x64-gnu-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-x64-gnu/-/cli-linux-x64-gnu-2.8.4.tgz"
     },
-    "@tauri-apps/cli-linux-x64-musl@2.2.5": {
-      "integrity": "sha512-NLAO/SymDxeGuOWWQZCpwoED1K1jaHUvW+u9ip+rTetnxFPLvf3zXthx4QVKfCZLdj2WLQz4cLjHyQdMDXAM+w==",
+    "@tauri-apps/cli-linux-x64-musl@2.8.4": {
+      "integrity": "sha512-ot9STAwyezN8w+bBHZ+bqSQIJ0qPZFlz/AyscpGqB/JnJQVDFQcRDmUPFEaAtt2UUHSWzN3GoTJ5ypqLBp2WQA==",
       "os": ["linux"],
       "cpu": ["x64"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-x64-musl/-/cli-linux-x64-musl-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-linux-x64-musl/-/cli-linux-x64-musl-2.8.4.tgz"
     },
-    "@tauri-apps/cli-win32-arm64-msvc@2.2.5": {
-      "integrity": "sha512-yG5KFbqrHfGjkAQAaaCD4i7cJklBjmMxZ2C92DEnqCOujSsEuLxrwwoKxQ4+hqEHOmF3lyX0vfqhgZcS03H38w==",
+    "@tauri-apps/cli-win32-arm64-msvc@2.8.4": {
+      "integrity": "sha512-+2aJ/g90dhLiOLFSD1PbElXX3SoMdpO7HFPAZB+xot3CWlAZD1tReUFy7xe0L5GAR16ZmrxpIDM9v9gn5xRy/w==",
       "os": ["win32"],
       "cpu": ["arm64"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-win32-arm64-msvc/-/cli-win32-arm64-msvc-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-win32-arm64-msvc/-/cli-win32-arm64-msvc-2.8.4.tgz"
     },
-    "@tauri-apps/cli-win32-ia32-msvc@2.2.5": {
-      "integrity": "sha512-G5lq+2EdxOc8ttg3uhME5t9U3hMGTxwaKz0X4DplTG2Iv4lcNWqw/AESIJVHa5a+EB+ZCC8I+yOfIykp/Cd5mQ==",
+    "@tauri-apps/cli-win32-ia32-msvc@2.8.4": {
+      "integrity": "sha512-yj7WDxkL1t9Uzr2gufQ1Hl7hrHuFKTNEOyascbc109EoiAqCp0tgZ2IykQqOZmZOHU884UAWI1pVMqBhS/BfhA==",
       "os": ["win32"],
       "cpu": ["ia32"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-win32-ia32-msvc/-/cli-win32-ia32-msvc-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-win32-ia32-msvc/-/cli-win32-ia32-msvc-2.8.4.tgz"
     },
-    "@tauri-apps/cli-win32-x64-msvc@2.2.5": {
-      "integrity": "sha512-vw4fPVOo0rIQIlqw6xUvK2nwiRFBHNgayDE2Z/SomJlQJAJ1q4VgpHOPl12ouuicmTjK1gWKm7RTouQe3Nig0Q==",
+    "@tauri-apps/cli-win32-x64-msvc@2.8.4": {
+      "integrity": "sha512-XuvGB4ehBdd7QhMZ9qbj/8icGEatDuBNxyYHbLKsTYh90ggUlPa/AtaqcC1Fo69lGkTmq9BOKrs1aWSi7xDonA==",
       "os": ["win32"],
       "cpu": ["x64"],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-2.8.4.tgz"
     },
-    "@tauri-apps/cli@2.2.5": {
-      "integrity": "sha512-PaefTQUCYYqvZWdH8EhXQkyJEjQwtoy/OHGoPcZx7Gk3D3K6AtGSxZ9OlHIz3Bu5LDGgVBk36vKtHW0WYsWnbw==",
+    "@tauri-apps/cli@2.8.4": {
+      "integrity": "sha512-ejUZBzuQRcjFV+v/gdj/DcbyX/6T4unZQjMSBZwLzP/CymEjKcc2+Fc8xTORThebHDUvqoXMdsCZt8r+hyN15g==",
       "optionalDependencies": [
         "@tauri-apps/cli-darwin-arm64",
         "@tauri-apps/cli-darwin-x64",
         "@tauri-apps/cli-linux-arm-gnueabihf",
         "@tauri-apps/cli-linux-arm64-gnu",
         "@tauri-apps/cli-linux-arm64-musl",
+        "@tauri-apps/cli-linux-riscv64-gnu",
         "@tauri-apps/cli-linux-x64-gnu",
         "@tauri-apps/cli-linux-x64-musl",
         "@tauri-apps/cli-win32-arm64-msvc",
@@ -404,14 +411,14 @@
         "@tauri-apps/cli-win32-x64-msvc"
       ],
       "bin": true,
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli/-/cli-2.2.5.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/cli/-/cli-2.8.4.tgz"
     },
-    "@tauri-apps/plugin-opener@2.2.4": {
-      "integrity": "sha512-5oXWr80ek8JHwQ/budIdZTHAWBF4XfYMiXIyH8Pr92QtwEG+6xCgCcws0k4xCemVDEetclveJPu8yB9ysuU/dQ==",
+    "@tauri-apps/plugin-opener@2.5.0": {
+      "integrity": "sha512-B0LShOYae4CZjN8leiNDbnfjSrTwoZakqKaWpfoH6nXiJwt6Rgj6RnVIffG3DoJiKsffRhMkjmBV9VeilSb4TA==",
       "dependencies": [
         "@tauri-apps/api"
       ],
-      "tarball": "https://registry.npmmirror.com/@tauri-apps/plugin-opener/-/plugin-opener-2.2.4.tgz"
+      "tarball": "https://registry.npmmirror.com/@tauri-apps/plugin-opener/-/plugin-opener-2.5.0.tgz"
     },
     "@types/estree@1.0.8": {
       "integrity": "sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==",

@@ -1,6 +1,10 @@
-use crate::handle;
 use std::sync::OnceLock;
+
 use tauri_plugin_global_shortcut::{GlobalShortcutExt as _, ShortcutState};
+#[cfg(target_os = "windows")]
+use windows::Win32::UI::Input::KeyboardAndMouse::{GetAsyncKeyState, VIRTUAL_KEY};
+
+use crate::handle;
 
 pub struct Hotkey {}
 
@@ -34,6 +38,22 @@ impl Hotkey {
         log::debug!("Registered hotkey: {hotkey} -> {func_type:?}");
 
         Ok(())
+    }
+
+    /// 自上次检查以来是否按下了键
+    #[cfg(target_os = "windows")]
+    pub fn is_key_pressed_async(&self, vk_code: VIRTUAL_KEY) -> bool {
+        unsafe {
+            let result = GetAsyncKeyState(vk_code.0 as i32);
+            // 自上次检查以来按下了键
+            // (result as u16 & 0x8000) != 0
+            result as u16 & 0x1 != 0
+        }
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    pub fn is_key_pressed_async(&self, _vk_code: i32) -> bool {
+        false // 非Windows系统不支持
     }
 }
 

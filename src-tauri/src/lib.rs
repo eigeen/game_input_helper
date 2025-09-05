@@ -1,30 +1,41 @@
-use std::{thread, time::Duration};
+use std::{
+    sync::atomic::{AtomicBool, Ordering},
+    time::Duration,
+};
 
 use tauri::{LogicalPosition, LogicalSize, Manager as _};
+use windows::Win32::UI::Input::KeyboardAndMouse::VK_RETURN;
 
+mod game_detector;
 mod handle;
 mod hotkey;
 mod input;
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn input(content: &str) {
-    let handle = handle::Handle::global();
-    let _ = handle.hide_window();
+static PREVENT_NEXT_SHOW: AtomicBool = AtomicBool::new(false);
 
-    thread::sleep(Duration::from_millis(100));
-    let input = input::Input::global();
-    // if let Err(e) = input.input_key(enigo::Key::Return) {
-    //     log::error!("Failed to input return: {}", e);
-    // }
-    // thread::sleep(Duration::from_millis(100));
-    if let Err(e) = input.input_text(content) {
-        log::error!("Failed to input text: {}", e);
-    };
-    // thread::sleep(Duration::from_millis(200));
-    // if let Err(e) = input.input_key(enigo::Key::Return) {
-    //     log::error!("Failed to input return: {}", e);
-    // }
+// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+
+#[tauri::command]
+async fn input(content: String) -> Result<(), ()> {
+    tokio::spawn(async move {
+        let handle = handle::Handle::global();
+        let _ = handle.hide_window();
+
+        tokio::time::sleep(Duration::from_millis(300)).await;
+        let input = input::Input::global();
+        if let Err(e) = input.input_text_chunked(&content).await {
+            log::error!("Failed to input text: {}", e);
+        };
+
+        tokio::time::sleep(Duration::from_millis(300)).await;
+        // 防止发送时也触发显示
+        PREVENT_NEXT_SHOW.store(true, Ordering::Relaxed);
+        if let Err(e) = input.input_key(enigo::Key::Return).await {
+            log::error!("Failed to input return: {}", e);
+        }
+    });
+
+    Ok(())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -33,40 +44,79 @@ pub fn run() {
         .filter_level(log::LevelFilter::Debug)
         .init();
 
-    let app = tauri::Builder::default()
-        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
-        .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {
-            let _ = handle::Handle::global().show_window();
-        }))
-        .setup(|app| {
-            let main_window = app.get_webview_window("main").unwrap();
-            main_window.set_shadow(true)?;
-            main_window.set_size(LogicalSize::new(400.0, 80.0))?;
-            main_window.set_position(LogicalPosition::new(1200.0, 800.0))?;
-            main_window.set_minimizable(false)?;
-            main_window.set_maximizable(false)?;
-            // main_window.set_resizable(false)?;
-            // main_window.set_decorations(false)?;
-            // main_window.set_skip_taskbar(true)?;
+    // init global tokio runtime
+    let rt = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(2)
+        .enable_all()
+        .build()
+        .unwrap();
 
-            handle::Handle::init(app.handle());
-            input::Input::init().expect("Failed to initialize input");
-            hotkey::Hotkey::global()
-                .register("F7", hotkey::HotkeyFunc::SwitchDisplay)
-                .expect("Failed to register hotkey");
+    rt.block_on(async {
+        input::Input::global()
+            .init()
+            .await
+            .expect("Failed to initialize input");
 
-            // main_window.clone().on_window_event(move |event| {
-            //     if let tauri::WindowEvent::CloseRequested { api, .. } = event {
-            //         let _ = main_window.minimize();
-            //         api.prevent_close();
-            //     }
-            // });
+        let app = tauri::Builder::default()
+            .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+            .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {
+                let _ = handle::Handle::global().show_window();
+            }))
+            .setup(|app| {
+                let main_window = app.get_webview_window("main").unwrap();
+                main_window.set_shadow(true)?;
+                main_window.set_size(LogicalSize::new(400.0, 80.0))?;
+                main_window.set_position(LogicalPosition::new(1200.0, 800.0))?;
+                main_window.set_minimizable(false)?;
+                main_window.set_maximizable(false)?;
 
-            Ok(())
-        })
-        .invoke_handler(tauri::generate_handler![input])
-        .build(tauri::generate_context!())
-        .expect("error while building tauri application");
+                handle::Handle::init(app.handle());
 
-    app.run(move |_handle, _event| {});
+                // 注册F7强制显示/隐藏热键
+                hotkey::Hotkey::global()
+                    .register("F7", hotkey::HotkeyFunc::SwitchDisplay)
+                    .expect("Failed to register F7 hotkey");
+
+                // 启动游戏检测线程，使用轮询方式检测Enter键
+                tokio::spawn(async {
+                    let game_detector = game_detector::GameDetector::new();
+
+                    loop {
+                        // 轮询检测Enter键状态
+                        let pressed = hotkey::Hotkey::global().is_key_pressed_async(VK_RETURN);
+
+                        // 检测Enter键按下（上升沿）
+                        if pressed {
+                            // 防止重复显示
+                            let is_prevent = PREVENT_NEXT_SHOW.compare_exchange(
+                                true,
+                                false,
+                                Ordering::Relaxed,
+                                Ordering::Relaxed,
+                            );
+                            if is_prevent.is_ok() {
+                                continue;
+                            }
+
+                            let is_game_active = game_detector.is_game_active();
+                            // 游戏在前台
+                            if is_game_active {
+                                log::info!("Enter key pressed in game, showing window");
+                                let handle = handle::Handle::global();
+                                let _ = handle.show_window();
+                            }
+                        }
+
+                        tokio::time::sleep(Duration::from_millis(50)).await;
+                    }
+                });
+
+                Ok(())
+            })
+            .invoke_handler(tauri::generate_handler![input])
+            .build(tauri::generate_context!())
+            .expect("error while building tauri application");
+
+        app.run(move |_handle, _event| {});
+    })
 }
