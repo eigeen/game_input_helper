@@ -27,6 +27,7 @@ onMounted(() => {
   tauriListen('focus_input', (_event) => {
     set_input_focus()
   })
+  set_input_focus()
 })
 </script>
 
