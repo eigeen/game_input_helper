@@ -69,6 +69,10 @@ pub fn run() {
                 main_window.set_position(LogicalPosition::new(1200.0, 800.0))?;
                 main_window.set_minimizable(false)?;
                 main_window.set_maximizable(false)?;
+                main_window.set_title(&format!(
+                    "Game Input Helper - v{}",
+                    env!("CARGO_PKG_VERSION")
+                ))?;
 
                 handle::Handle::init(app.handle());
 
@@ -77,7 +81,10 @@ pub fn run() {
                     .register("F7", hotkey::HotkeyFunc::SwitchDisplay)
                     .expect("Failed to register F7 hotkey");
 
-                // 启动游戏检测线程，使用轮询方式检测Enter键
+                // 启动游戏检测线程，使用轮询方式检测按键事件
+                // 轮询是由于其他事件驱动的API在游戏环境都不太好使
+                // 例如由于引擎Direct Input，系统按键事件无法监听
+                // 全局快捷键会阻止按键发送到游戏本身
                 tokio::spawn(async {
                     let game_detector = game_detector::GameDetector::new();
 
@@ -98,9 +105,8 @@ pub fn run() {
                                 continue;
                             }
 
-                            let is_game_active = game_detector.is_game_active();
                             // 游戏在前台
-                            if is_game_active {
+                            if game_detector.is_game_active() {
                                 log::info!("Enter key pressed in game, showing window");
                                 let handle = handle::Handle::global();
                                 let _ = handle.show_window();

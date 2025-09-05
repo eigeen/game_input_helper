@@ -42,26 +42,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "alt_input_helper"
-version = "0.2.0"
-dependencies = [
- "enigo",
- "env_logger",
- "eyre",
- "log",
- "parking_lot",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-global-shortcut",
- "tauri-plugin-opener",
- "tauri-plugin-single-instance",
- "tokio",
- "windows 0.58.0",
-]
-
-[[package]]
 name = "android-tzdata"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1239,6 +1219,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
 dependencies = [
  "byteorder",
+]
+
+[[package]]
+name = "game_input_helper"
+version = "0.2.0"
+dependencies = [
+ "enigo",
+ "env_logger",
+ "eyre",
+ "log",
+ "parking_lot",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-global-shortcut",
+ "tauri-plugin-opener",
+ "tauri-plugin-single-instance",
+ "tokio",
+ "windows 0.58.0",
 ]
 
 [[package]]
