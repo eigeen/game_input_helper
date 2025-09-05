@@ -1,16 +1,28 @@
-# Tauri + Vue + TypeScript
+# Game Input Helper
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+游戏中文输入工具，目前仅支持 Helldivers 2 （绝地潜兵2）
 
-## Recommended IDE Setup
+## 用法
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+按下Enter，游戏内会打开输入框，同时也会弹出应用窗口（确保这时候游戏的输入框是激活的）
 
-## Type Support For `.vue` Imports in TS
+在应用窗口内输入文本，按回车即发送到游戏，并自动发送消息。
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+在任何时候都可以通过F7显示或隐藏窗口。
 
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
+## 构建
 
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+### 环境需求
+
+- Rust 1.88
+- deno 2
+
+### 构建步骤
+
+```bash
+# 开发环境
+deno task tauri dev
+
+# 构建发布版本
+deno task tauri build
+```
