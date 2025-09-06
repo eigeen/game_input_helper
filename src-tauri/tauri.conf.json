@@ -4,9 +4,9 @@
   "version": "0.1.2",
   "identifier": "com.eigeen.altinputhelper",
   "build": {
-    "beforeDevCommand": "deno task dev",
+    "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "deno task build",
+    "beforeBuildCommand": "pnpm build",
     "frontendDist": "../dist"
   },
   "app": {
