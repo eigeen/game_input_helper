@@ -15,14 +15,15 @@
 ### 环境需求
 
 - Rust 1.88
-- deno 2
+- nodejs 20+
+- pnpm
 
 ### 构建步骤
 
 ```bash
 # 开发环境
-deno task tauri dev
+pnpm tauri dev
 
 # 构建发布版本
-deno task tauri build
+pnpm tauri build
 ```
