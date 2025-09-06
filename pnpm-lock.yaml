@@ -8,11 +8,14 @@ importers:
 
   .:
     dependencies:
+      '@mdi/font':
+        specifier: ^7.4.47
+        version: 7.4.47
       '@tauri-apps/api':
         specifier: ^2
         version: 2.8.0
       '@tauri-apps/plugin-opener':
-        specifier: ^2
+        specifier: ~2
         version: 2.5.0
       vue:
         specifier: ^3.5.13
@@ -211,6 +214,9 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
+
+  '@mdi/font@7.4.47':
+    resolution: {integrity: sha512-43MtGpd585SNzHZPcYowu/84Vz2a2g31TvPMTm9uTiCSWzaheQySUcSyUH/46fPnuPQWof2yd0pGBtzee/IQWw==}
 
   '@rolldown/pluginutils@1.0.0-beta.29':
     resolution: {integrity: sha512-NIJgOsMjbxAXvoGq/X0gD7VPMQ8j9g0BiDaNjVNVjvl+iKXxL3Jre0v31RmBYeLEmkbj2s02v8vFTbUXi5XS2Q==}
@@ -705,6 +711,8 @@ snapshots:
     optional: true
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
+
+  '@mdi/font@7.4.47': {}
 
   '@rolldown/pluginutils@1.0.0-beta.29': {}
 

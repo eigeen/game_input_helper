@@ -58,6 +58,7 @@ pub fn run() {
             .expect("Failed to initialize input");
 
         let app = tauri::Builder::default()
+            .plugin(tauri_plugin_opener::init())
             .plugin(tauri_plugin_global_shortcut::Builder::new().build())
             .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {
                 let _ = handle::Handle::global().show_window();
@@ -65,7 +66,7 @@ pub fn run() {
             .setup(|app| {
                 let main_window = app.get_webview_window("main").unwrap();
                 main_window.set_shadow(true)?;
-                main_window.set_size(LogicalSize::new(400.0, 80.0))?;
+                main_window.set_size(LogicalSize::new(410.0, 70.0))?;
                 main_window.set_position(LogicalPosition::new(1200.0, 800.0))?;
                 main_window.set_minimizable(false)?;
                 main_window.set_maximizable(false)?;

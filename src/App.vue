@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref } from "vue";
+import { onMounted, ref, useTemplateRef } from "vue";
 import { invoke } from "@tauri-apps/api/core";
-import { listen as tauriListen } from '@tauri-apps/api/event';
+import { listen as tauriListen } from "@tauri-apps/api/event";
+import { openUrl } from '@tauri-apps/plugin-opener'
 
 const content = ref("");
 
-const inputBox: Ref<HTMLInputElement | null> = ref(null);
+const inputBox = useTemplateRef("inputBox");
 
 async function input_submit() {
   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -24,11 +25,11 @@ function set_input_focus() {
 }
 
 onMounted(() => {
-  tauriListen('focus_input', (_event) => {
-    set_input_focus()
-  })
-  set_input_focus()
-})
+  tauriListen("focus_input", (_event) => {
+    set_input_focus();
+  });
+  set_input_focus();
+});
 </script>
 
 <template>
@@ -36,6 +37,11 @@ onMounted(() => {
     <form class="row" @submit.prevent="input_submit">
       <input id="input-box" ref="inputBox" v-model="content" placeholder="输入内容..." />
       <button type="submit">按Enter发送</button>
+      <!-- GitHub泡泡 -->
+      <i
+        class="mdi mdi-help-circle-outline icon"
+        @click="openUrl('https://github.com/eigeen/game_input_helper')"
+      ></i>
     </form>
   </main>
 </template>
@@ -112,6 +118,16 @@ button {
   outline: none;
 }
 
+.icon {
+  color: #666;
+  cursor: help;
+  transition: color 0.2s ease;
+}
+
+.icon:hover {
+  color: #396cd8;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: #f6f6f6;
@@ -130,6 +146,14 @@ button {
 
   button:active {
     background-color: #0f0f0f69;
+  }
+
+  .icon {
+    color: #ccc;
+  }
+
+  .icon:hover {
+    color: #24c8db;
   }
 }
 </style>
