@@ -1,6 +1,6 @@
 [package]
 name = "game_input_helper"
-version = "0.2.0"
+version = "0.2.1"
 description = "Game input helper"
 authors = ["Eigeen <dengyk2002@qq.com>"]
 edition = "2024"

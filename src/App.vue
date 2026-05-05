@@ -3,19 +3,32 @@ import { onMounted, ref, useTemplateRef } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 import { listen as tauriListen } from "@tauri-apps/api/event";
 import { openUrl } from '@tauri-apps/plugin-opener'
+import { InputHistory } from "./inputHistory";
 
 const content = ref("");
+const inputHistory = new InputHistory();
 
 const inputBox = useTemplateRef("inputBox");
 
 async function input_submit() {
   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+  const submittedContent = content.value;
+
   try {
-    await invoke("input", { content: content.value });
+    await invoke("input", { content: submittedContent });
+    inputHistory.recordSubmittedContent(submittedContent);
     content.value = "";
   } catch (e) {
     console.error(e);
   }
+}
+
+function show_older_history_content() {
+  content.value = inputHistory.showOlderContent(content.value);
+}
+
+function show_newer_history_content() {
+  content.value = inputHistory.showNewerContent(content.value);
 }
 
 function set_input_focus() {
@@ -34,7 +47,12 @@ onMounted(() => {
 
 <template>
   <main class="container">
-    <form class="row" @submit.prevent="input_submit">
+    <form
+      class="row"
+      @submit.prevent="input_submit"
+      @keydown.up.prevent="show_older_history_content"
+      @keydown.down.prevent="show_newer_history_content"
+    >
       <input id="input-box" ref="inputBox" v-model="content" placeholder="输入内容..." />
       <button type="submit">按Enter发送</button>
       <!-- GitHub泡泡 -->
