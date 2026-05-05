@@ -1,17 +1,22 @@
 use std::{
     sync::atomic::{AtomicBool, Ordering},
-    time::Duration,
+    time::{Duration, Instant},
 };
 
 use tauri::{LogicalPosition, LogicalSize, Manager as _};
 use windows::Win32::UI::Input::KeyboardAndMouse::VK_RETURN;
 
+mod app_ime_state;
 mod game_detector;
 mod handle;
 mod hotkey;
+mod ime_guard;
 mod input;
+mod window_ime;
 
 static PREVENT_NEXT_SHOW: AtomicBool = AtomicBool::new(false);
+const APP_IME_STATE_INTERVAL: Duration = Duration::from_millis(500);
+const IME_GUARD_INTERVAL: Duration = Duration::from_millis(1000);
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
@@ -82,14 +87,19 @@ pub fn run() {
                     .register("F7", hotkey::HotkeyFunc::SwitchDisplay)
                     .expect("Failed to register F7 hotkey");
 
+                tokio::spawn(watch_app_ime_state_loop(main_window.clone()));
+
                 // 启动游戏检测线程，使用轮询方式检测按键事件
                 // 轮询是由于其他事件驱动的API在游戏环境都不太好使
                 // 例如由于引擎Direct Input，系统按键事件无法监听
                 // 全局快捷键会阻止按键发送到游戏本身
                 tokio::spawn(async {
                     let game_detector = game_detector::GameDetector::new();
+                    let ime_guard = ime_guard::ImeGuard::new();
+                    let mut last_ime_guard = Instant::now() - IME_GUARD_INTERVAL;
 
                     loop {
+                        guard_game_ime(&game_detector, &ime_guard, &mut last_ime_guard);
                         // 轮询检测Enter键状态
                         let pressed = hotkey::Hotkey::global().is_key_pressed_async(VK_RETURN);
 
@@ -126,4 +136,31 @@ pub fn run() {
 
         app.run(move |_handle, _event| {});
     })
+}
+
+fn guard_game_ime(
+    game_detector: &game_detector::GameDetector,
+    ime_guard: &ime_guard::ImeGuard,
+    last_ime_guard: &mut Instant,
+) {
+    if last_ime_guard.elapsed() < IME_GUARD_INTERVAL {
+        return;
+    }
+
+    *last_ime_guard = Instant::now();
+    if game_detector.is_game_active() {
+        let _ = ime_guard.keep_foreground_ime_english();
+    }
+}
+
+async fn watch_app_ime_state_loop(window: tauri::WebviewWindow) {
+    let mut app_ime_state = app_ime_state::AppImeState::new();
+
+    loop {
+        if let Err(error) = app_ime_state.update(&window) {
+            log::debug!("failed to update app IME state: {error}");
+        }
+
+        tokio::time::sleep(APP_IME_STATE_INTERVAL).await;
+    }
 }
