@@ -2,7 +2,7 @@
 import { onMounted, ref, useTemplateRef } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 import { listen as tauriListen } from "@tauri-apps/api/event";
-import { openUrl } from '@tauri-apps/plugin-opener'
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { InputHistory } from "./inputHistory";
 
 const content = ref("");
@@ -37,6 +37,14 @@ function set_input_focus() {
   }
 }
 
+async function open_settings_window() {
+  try {
+    await invoke("open_settings_window");
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 onMounted(() => {
   tauriListen("focus_input", (_event) => {
     set_input_focus();
@@ -54,12 +62,13 @@ onMounted(() => {
       @keydown.down.prevent="show_newer_history_content"
     >
       <input id="input-box" ref="inputBox" v-model="content" placeholder="输入内容..." />
-      <button type="submit">按Enter发送</button>
-      <!-- GitHub泡泡 -->
+      <button class="submit-button" type="submit">按Enter发送</button>
       <i
         class="mdi mdi-help-circle-outline icon"
+        title="GitHub"
         @click="openUrl('https://github.com/eigeen/game_input_helper')"
       ></i>
+      <i class="mdi mdi-cog-outline icon" title="设置" @click="open_settings_window"></i>
     </form>
   </main>
 </template>
@@ -90,6 +99,11 @@ onMounted(() => {
   -webkit-text-size-adjust: 100%;
 }
 
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
 .container {
   margin: 0;
   /* padding-top: 10vh; */
@@ -100,12 +114,19 @@ onMounted(() => {
 }
 
 .row {
-  display: flex;
-  justify-content: center;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 104px 28px 28px;
+  align-items: center;
+  gap: 4px;
+  width: 100vw;
+  height: 70px;
+  padding: 8px;
 }
 
 input,
 button {
+  box-sizing: border-box;
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -122,6 +143,15 @@ button {
   cursor: pointer;
 }
 
+.submit-button {
+  box-sizing: border-box;
+  width: 104px;
+  height: 54px;
+  padding: 0;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
 button:hover {
   border-color: #396cd8;
 }
@@ -136,9 +166,21 @@ button {
   outline: none;
 }
 
+#input-box {
+  width: 100%;
+  min-width: 0;
+  height: 54px;
+}
+
 .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 54px;
   color: #666;
-  cursor: help;
+  cursor: pointer;
+  font-size: 20px;
   transition: color 0.2s ease;
 }
 

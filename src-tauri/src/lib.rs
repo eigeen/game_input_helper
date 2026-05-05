@@ -3,7 +3,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-use tauri::{LogicalPosition, LogicalSize, Manager as _};
+use tauri::{LogicalPosition, LogicalSize, Manager as _, RunEvent, WindowEvent};
 use windows::Win32::UI::Input::KeyboardAndMouse::VK_RETURN;
 
 mod app_ime_state;
@@ -12,6 +12,8 @@ mod handle;
 mod hotkey;
 mod ime_guard;
 mod input;
+mod settings;
+mod settings_window;
 mod window_ime;
 
 static PREVENT_NEXT_SHOW: AtomicBool = AtomicBool::new(false);
@@ -25,6 +27,50 @@ const GAME_INPUT_DELAY: Duration = Duration::from_millis(300);
 async fn input(content: String) -> Result<(), ()> {
     tokio::spawn(submit_content_to_game(content));
     Ok(())
+}
+
+#[tauri::command]
+async fn open_settings_window(app: tauri::AppHandle) -> Result<(), String> {
+    run_blocking_task(move || settings_window::show(&app)).await
+}
+
+#[tauri::command]
+async fn load_settings() -> Result<settings::AppSettings, String> {
+    run_settings_task(|store| store.load()).await
+}
+
+#[tauri::command]
+async fn save_settings(settings: settings::AppSettings) -> Result<(), String> {
+    run_settings_task(move |store| store.save(settings)).await
+}
+
+async fn run_settings_task<T>(
+    task: impl FnOnce(settings::SettingsStore) -> eyre::Result<T> + Send + 'static,
+) -> Result<T, String>
+where
+    T: Send + 'static,
+{
+    run_blocking_task(move || {
+        let store = settings::SettingsStore::for_app_directory()?;
+        task(store)
+    })
+    .await
+}
+
+async fn run_blocking_task<T>(
+    task: impl FnOnce() -> eyre::Result<T> + Send + 'static,
+) -> Result<T, String>
+where
+    T: Send + 'static,
+{
+    tokio::task::spawn_blocking(task)
+    .await
+    .map_err(error_message)?
+    .map_err(error_message)
+}
+
+fn error_message(error: impl std::fmt::Display) -> String {
+    error.to_string()
 }
 
 async fn submit_content_to_game(content: String) {
@@ -118,12 +164,14 @@ pub fn run() {
                 // 例如由于引擎Direct Input，系统按键事件无法监听
                 // 全局快捷键会阻止按键发送到游戏本身
                 tokio::spawn(async {
-                    let game_detector = game_detector::GameDetector::new();
+                    let settings_store = settings::SettingsStore::for_app_directory()
+                        .expect("Failed to initialize settings store");
+                    let mut game_detector = game_detector::GameDetector::new(settings_store);
                     let ime_guard = ime_guard::ImeGuard::new();
                     let mut last_ime_guard = Instant::now() - IME_GUARD_INTERVAL;
 
                     loop {
-                        guard_game_ime(&game_detector, &ime_guard, &mut last_ime_guard);
+                        guard_game_ime(&mut game_detector, &ime_guard, &mut last_ime_guard);
                         // 轮询检测Enter键状态
                         let pressed = hotkey::Hotkey::global().is_key_pressed_async(VK_RETURN);
 
@@ -154,16 +202,33 @@ pub fn run() {
 
                 Ok(())
             })
-            .invoke_handler(tauri::generate_handler![input])
+            .invoke_handler(tauri::generate_handler![
+                input,
+                open_settings_window,
+                load_settings,
+                save_settings
+            ])
             .build(tauri::generate_context!())
             .expect("error while building tauri application");
 
-        app.run(move |_handle, _event| {});
+        app.run(move |handle, event| {
+            exit_when_main_window_closes(handle, event);
+        });
     })
 }
 
+fn exit_when_main_window_closes(handle: &tauri::AppHandle, event: RunEvent) {
+    let RunEvent::WindowEvent { label, event, .. } = event else {
+        return;
+    };
+
+    if label == "main" && matches!(event, WindowEvent::CloseRequested { .. }) {
+        handle.exit(0);
+    }
+}
+
 fn guard_game_ime(
-    game_detector: &game_detector::GameDetector,
+    game_detector: &mut game_detector::GameDetector,
     ime_guard: &ime_guard::ImeGuard,
     last_ime_guard: &mut Instant,
 ) {
