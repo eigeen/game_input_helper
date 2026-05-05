@@ -17,30 +17,54 @@ mod window_ime;
 static PREVENT_NEXT_SHOW: AtomicBool = AtomicBool::new(false);
 const APP_IME_STATE_INTERVAL: Duration = Duration::from_millis(500);
 const IME_GUARD_INTERVAL: Duration = Duration::from_millis(1000);
+const GAME_INPUT_DELAY: Duration = Duration::from_millis(300);
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
 #[tauri::command]
 async fn input(content: String) -> Result<(), ()> {
-    tokio::spawn(async move {
-        let handle = handle::Handle::global();
-        let _ = handle.hide_window();
-
-        tokio::time::sleep(Duration::from_millis(300)).await;
-        let input = input::Input::global();
-        if let Err(e) = input.input_text_chunked(&content).await {
-            log::error!("Failed to input text: {}", e);
-        };
-
-        tokio::time::sleep(Duration::from_millis(300)).await;
-        // 防止发送时也触发显示
-        PREVENT_NEXT_SHOW.store(true, Ordering::Relaxed);
-        if let Err(e) = input.input_key(enigo::Key::Return).await {
-            log::error!("Failed to input return: {}", e);
-        }
-    });
-
+    tokio::spawn(submit_content_to_game(content));
     Ok(())
+}
+
+async fn submit_content_to_game(content: String) {
+    let handle = handle::Handle::global();
+    let _ = handle.hide_window();
+
+    wait_for_game_focus().await;
+    send_content_to_game(&content).await;
+
+    wait_for_game_focus().await;
+    submit_game_input().await;
+
+    wait_for_game_focus().await;
+    show_input_window(handle);
+}
+
+async fn send_content_to_game(content: &str) {
+    let input = input::Input::global();
+    if let Err(error) = input.input_text_chunked(content).await {
+        log::error!("Failed to input text: {error}");
+    }
+}
+
+async fn submit_game_input() {
+    let input = input::Input::global();
+    PREVENT_NEXT_SHOW.store(true, Ordering::Relaxed);
+
+    if let Err(error) = input.input_key(enigo::Key::Return).await {
+        log::error!("Failed to input return: {error}");
+    }
+}
+
+async fn wait_for_game_focus() {
+    tokio::time::sleep(GAME_INPUT_DELAY).await;
+}
+
+fn show_input_window(handle: &handle::Handle) {
+    if let Err(error) = handle.show_window() {
+        log::error!("Failed to show input window: {error}");
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

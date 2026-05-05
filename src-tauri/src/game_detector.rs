@@ -1,6 +1,11 @@
 #[cfg(target_os = "windows")]
 use windows::Win32::UI::WindowsAndMessaging::{GetForegroundWindow, GetWindowTextW};
 
+#[cfg(not(debug_assertions))]
+const GAME_TITLES: &[&str] = &["HELLDIVERS"];
+#[cfg(debug_assertions)]
+const GAME_TITLES: &[&str] = &["HELLDIVERS", "VISUAL STUDIO CODE"];
+
 #[cfg(not(target_os = "windows"))]
 pub struct GameDetector;
 
@@ -33,7 +38,10 @@ impl GameDetector {
             }
         };
 
-        title.to_uppercase().contains("HELLDIVERS")
+        let title_upper = title.to_uppercase();
+        GAME_TITLES
+            .iter()
+            .any(|&game_title| title_upper.contains(game_title))
     }
 
     pub fn get_foreground_window_title(&self) -> eyre::Result<String> {
